@@ -35,6 +35,12 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'devise', '~> 4.2'
 gem 'omniauth', '~> 1.6'
 
+# image
+gem 'carrierwave'
+
+# aws
+gem 'fog'
+
 gem 'active_model_serializers', '~> 0.10.0', require:true
 gem 'koala', '~> 3.0.0'
 

@@ -11,13 +11,16 @@ class Api::V1::UsersController < ApplicationController
         user.save
         render json: user, status: :ok
       else
+        random_password =Devise.friendly_token[0,20]
         user = User.new(
                     name: user_data['name'],
                     email: user_data['email'],
-                    password: Devise.friendly_token[0,20],
                     uid: user_data['id'],
                     provider: 'Facebook',
-                    local_image: user_data['picture']['data']['url']
+                    sns_image: user_data['picture']['data']['url'],
+                    confirmed_at: DateTime.now,
+                    password: random_password,
+                    password_confirmation: random_password
                 )
         user.generate_authentication_token
         if user.save

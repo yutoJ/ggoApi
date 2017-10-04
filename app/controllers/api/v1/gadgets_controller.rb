@@ -48,18 +48,18 @@ class Api::V1::GadgetsController < ApplicationController
       (r[:start_date].to_datetime...r[:end_date].to_datetime).map { |day| day.strftime("%Y-%m-%d") }
     }.flatten.to_set
 
-    calendars = Calendar.where(
-          "gadget_id = ? and status = ? and day >= ?",
-          params[:id], 1, today
-        ).pluck(:day).map(&:to_datetime).map { |day| day.strftime("%Y-%m-%d") }.flatten.to_set
+    #calendars = Calendar.where(
+    #      "gadget_id = ? and status = ? and day >= ?",
+    #      params[:id], 1, today
+    #    ).pluck(:day).map(&:to_datetime).map { |day| day.strftime("%Y-%m-%d") }.flatten.to_set
 
-    unavailable_dates.merge calendars
+    #unavailable_dates.merge calendars
 
     if !gadget.nil?
       gadget_serializer = GadgetSerializer.new(
         gadget,
         image: gadget.cover_photo('medium'),
-        unavailable_dates: unavailable_dates
+    #    unavailable_dates: unavailable_dates
       )
       render json: { gadget: gadget_serializer, is_success: true}, status: :ok
     else
