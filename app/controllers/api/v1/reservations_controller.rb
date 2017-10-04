@@ -16,20 +16,21 @@ class Api::V1::ReservationsController < ApplicationController
       end_date = DateTime.parse(reservation_params[:end_date])
 
       days = (end_date - start_date).to_i + 1
-      special_days = Calendar.where(
-        "gadget_id = ? AND status = ? AND day BETWEEN ? AND ? AND price <> ?",
-        gadget.id, 0, start_date, end_date, gadget.price
-      ).pluck(:price)
 
-      # Make a reservation
+      #TODO
+      #special_days = Calendar.where(
+      #  "gadget_id = ? AND status = ? AND day BETWEEN ? AND ? AND price <> ?",
+      #  gadget.id, 0, start_date, end_date, gadget.price
+      #).pluck(:price)
+
       reservation = current_user.reservations.build(reservation_params)
       reservation.gadget = gadget
-      reservation.price = gadget.price
-      reservation.total = gadget.price * (days - special_days.count)
+      reservation.price = gadget.price * days
+      #reservation.total = gadget.price * (days - special_days.count)
 
-      special_days.each do |d|
-        reservation.total += d.price
-      end
+      #special_days.each do |d|
+      #  reservation.total += d.price
+      #end
 
       if reservation.Waiting!
         if gadget.Request?
@@ -46,13 +47,15 @@ class Api::V1::ReservationsController < ApplicationController
   end
 
   def reservations_by_gadget
+    #TODO local_image VS sns_image
     reservations = Reservation.where(gadget_id: params[:id])
-    reservations = reservations.map { |r| ReservationSerializer.new(r, avatar_url: r.user.image) }
+    reservations = reservations.map { |r| ReservationSerializer.new(r, local_image: r.user.local_image) }
     render json: {reservations: reservations, is_success: true}, status: :ok
   end
 
   def approve
     if @reservation.gadget.user_id == current_user.id
+      #TODO
       #charge(@reservation.gadget, @reservation)
       @reservation.Approved!
       render json: {is_success: true}, status: :ok

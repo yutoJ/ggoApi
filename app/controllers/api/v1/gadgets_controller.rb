@@ -2,7 +2,9 @@ class Api::V1::GadgetsController < ApplicationController
 
   def index
     if !params[:address].blank?
-      gadgets = Gadget.where(active: true).near(params[:address], 5, order: 'distance')
+      #gadgets = Gadget.where(active: true).near(params[:address], 5, order: 'distance')
+      #TODO
+      gadgets = Gadget.where(active: true)
     else
       gadgets = Gadget.where(active: true)
     end
@@ -36,18 +38,21 @@ class Api::V1::GadgetsController < ApplicationController
   end
 
   def show
-    gadget = Gadget.find(params[:id])
+    if Gadget.exists?(id: params[:id])
+      gadget = Gadget.find(params[:id])
+    else
+      render json: {error: "Invalid ID", is_success: false}, status: 422
+      return
+    end
 
     today = Date.today
     reservations = Reservation.where(
       "gadget_id = ? AND (start_date >= ? AND end_date >= ?) AND status = ?",
       params[:id], today, today, 1
     )
-
     unavailable_dates = reservations.map { |r|
       (r[:start_date].to_datetime...r[:end_date].to_datetime).map { |day| day.strftime("%Y-%m-%d") }
     }.flatten.to_set
-
     #calendars = Calendar.where(
     #      "gadget_id = ? and status = ? and day >= ?",
     #      params[:id], 1, today
@@ -59,7 +64,7 @@ class Api::V1::GadgetsController < ApplicationController
       gadget_serializer = GadgetSerializer.new(
         gadget,
         image: gadget.cover_photo('medium'),
-    #    unavailable_dates: unavailable_dates
+        unavailable_dates: unavailable_dates
       )
       render json: { gadget: gadget_serializer, is_success: true}, status: :ok
     else

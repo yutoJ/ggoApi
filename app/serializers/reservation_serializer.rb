@@ -6,7 +6,7 @@ class ReservationSerializer < ActiveModel::Serializer
   end
 
   def end_date
-    object.start_date.strftime("%Y-%m-%d")
+    object.end_date.strftime("%Y-%m-%d")
   end
 
   class UserSerializer < ActiveModel::Serializer
