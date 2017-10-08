@@ -1,5 +1,5 @@
 class GadgetSerializer < ActiveModel::Serializer
-  attributes :id, :listing_name, :description, :address,
+  attributes :id, :listing_name, :description, :address, :instant,
                   :gadget_type, :has_guarantee, :has_manual, :has_content,
                   :has_no_setup, :has_battery, :require_mobile, :require_account, :price, :active, :image, :unavailable_dates
 
@@ -15,5 +15,5 @@ class GadgetSerializer < ActiveModel::Serializer
     attributes :email, :name, :local_image
   end
 
-  belongs_to :user, serializer: UserSerializer, key: :host
+  belongs_to :user, serializer: UserSerializer, key: :owner
 end

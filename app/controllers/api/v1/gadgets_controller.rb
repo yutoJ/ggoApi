@@ -20,13 +20,15 @@ class Api::V1::GadgetsController < ApplicationController
             gadget.id, end_date, start_date, 1
           ).count
 
+          #TODO
           # Check #2: Check if there are any unavailable dates within that date range
-          calendars = Calendar.where(
-            "gadget_id = ? AND status = ? and day BETWEEN ? AND ?",
-            gadget.id, 1, start_date, end_date
-          ).count
+          #calendars = Calendar.where(
+          #  "gadget_id = ? AND status = ? and day BETWEEN ? AND ?",
+          #  gadget.id, 1, start_date, end_date
+          #).count
 
-          reservations == 0 && calendars == 0
+          #reservations == 0 && calendars == 0
+          reservations == 0
       }
     end
 
